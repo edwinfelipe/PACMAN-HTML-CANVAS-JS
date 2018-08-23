@@ -137,6 +137,7 @@ function setMap(map, blockSize){
     rows = 0;
     wall.length = 0;
 
+
     for(row = 0, rows = map.length; row < rows; row++){
         for(col = 0, columns = map[row].length; col < columns; col++){
             if(map[row][col]=== 1){
@@ -163,11 +164,11 @@ function draw(){
     }
     pacman.draw();
 }
-
+setMap(level0, 30);
 function run(){
     
     pacman.move(lastPress);
-    setMap(level0, 30);
+    
     draw();
     
 }
