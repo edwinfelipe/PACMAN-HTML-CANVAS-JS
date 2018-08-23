@@ -131,20 +131,17 @@ var level0=[
 ];
 
 function setMap(map, blockSize){
-    var col = 0,
-    row = 0,
-    columns = 0,
-    rows = 0;
+    var col = 0,  
+    columns = 0;
     wall.length = 0;
-
-
-    for(row = 0, rows = map.length; row < rows; row++){
-        for(col = 0, columns = map[row].length; col < columns; col++){
-            if(map[row][col]=== 1){
-                wall.push(new square(col * blockSize, row * blockSize, blockSize, blockSize, "#0055ff"));
+    for(row of map){
+        let ind = map.indexOf(row);
+        for(col = 0, columns = map[ind].length; col < columns; col++){
+            if(map[ind][col]=== 1){
+                wall.push(new square(col * blockSize, ind * blockSize, blockSize, blockSize, "#0055ff"));
             }
-            if(map[row][col]=== 0){
-                coin.push(new circle((col*blockSize) +(blockSize / 2),(row*blockSize) +(blockSize / 2),5,"gold"));
+            if(map[ind][col]=== 0){
+                coin.push(new circle((col*blockSize) + (blockSize / 2),(ind*blockSize) +(blockSize / 2),5,"gold"));
             }
         }
     }
