@@ -3,7 +3,7 @@ var cv = document.getElementById("lienzo");
 var cx = cv.getContext("2d");
 var lastPress = null;
 var dir = null;
-var canMove = true;
+ var recordLastPress;
 var square = function(x,y,wi,he,color){
     this.x = x;
     this.y = y;
@@ -138,8 +138,6 @@ function draw(){
             pacman.y = pacman.lastY;
             pacman.dir = null;
             canMove = false;
-        }else{
-            canMove = true;
         }
     }
     pacman.draw();
@@ -147,7 +145,7 @@ function draw(){
 
 function run(){
     
-    pacman.move(lastPress);
+   pacman.move(lastPress);
     setMap(level0, 30);
     draw();
     
@@ -157,10 +155,13 @@ window.setInterval(run,60)
 
 window.addEventListener("keydown",function(evt){
     let code = evt.keyCode;
+    
+    
     lastPress = code;
+    
+    
 
-    if(canMove){
-        pacman.move(lastPress)
-    }
+   
+    
 });
 };
