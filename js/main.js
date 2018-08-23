@@ -141,7 +141,8 @@ function setMap(map, blockSize){
                 wall.push(new square(col * blockSize, ind * blockSize, blockSize, blockSize, "#0055ff"));
             }
             if(map[ind][col]=== 0){
-                coin.push(new circle((col*blockSize) + (blockSize / 2),(ind*blockSize) +(blockSize / 2),5,"gold"));
+               // coin.push(new circle((col*blockSize) + (blockSize / 2),(ind*blockSize) +(blockSize / 2),5,"gold"));
+               coin.push(new square(col * blockSize, ind * blockSize, 10, 10, "gold"))
             }
         }
     }
@@ -156,8 +157,13 @@ function draw(){
             
         }
     }
-    for(let c of coin){
-        c.draw();
+    for(i = 0; i < coin.length; i++){
+        coin[i].draw();
+
+        if(pacman.intersects(coin[i])){
+          
+           coin.splice(coin.indexOf(coin[i]), 1)
+        }
     }
     pacman.draw();
 }
