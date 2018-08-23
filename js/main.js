@@ -3,7 +3,7 @@ var cv = document.getElementById("lienzo");
 var cx = cv.getContext("2d");
 var lastPress = null;
 var dir = null;
- var recordLastPress;
+ 
 var square = function(x,y,wi,he,color){
     this.x = x;
     this.y = y;
@@ -12,20 +12,14 @@ var square = function(x,y,wi,he,color){
     this.color = color;
     
 };
-
-square.prototype ={
-    draw: function(){
-        cx.beginPath();
-        cx.fillStyle = this.color;
-        cx.fillRect(this.x,this.y,this.wi,this.he);
-        
-        cx.fill();
-        cx.closePath();
-
-    }
+var circle = function(x,y,r,color){
+    this.x = x;
+    this.y = y;
+    this.r = r;
+    this.color = color;
     
 };
- player = function(x,y,wi,he,color,dir){
+var player = function(x,y,wi,he,color,dir){
     this.x = x;
     this.y = y;
     this.wi = wi;
@@ -35,14 +29,26 @@ square.prototype ={
 
    
 }
+
+
+square.prototype ={
+    draw: function(){
+        cx.beginPath();
+        cx.fillStyle = this.color;
+        cx.fillRect(this.x,this.y,this.wi,this.he);     
+        cx.fill();
+        cx.closePath();
+
+    }
+    
+};
+
 player.prototype ={
     draw: function(){
         cx.beginPath();
         cx.fillStyle = this.color;
         cx.fillRect(this.x,this.y,this.wi,this.he);
         cx.closePath();
-        
-
     },
     move: function(TheKey){
         if(TheKey===37){
@@ -86,21 +92,32 @@ player.prototype ={
             this.y + this.he > rect.y);
     }
 };
+circle.prototype ={
+    draw: function(){
+        cx.beginPath();
+        cx.fillStyle = this.color;
+        cx.moveTo(this.x,this.y);
+        cx.arc(this.x,this.y,this.r,Math.PI*2,0,true);
+        cx.fill();
+        cx.closePath();
+    }
+};
 //elementos
 var wall = [];
+var coin =[];
 var pacman = new player(90,90,30,30,"#FFFF00",dir);
 var level0=[
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1],
+    [1,3,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,3,1],
     [1,1,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,1,1],
-    [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
+    [1,0,0,3,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
     [1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1],
     [1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1],
     [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1],
     [1,0,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1],
-    [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,1,3,3,3,1,0,0,0,0,0,0,1],
     [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,0,1],
@@ -109,7 +126,7 @@ var level0=[
     [1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1],
     [1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1],
     [1,1,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,1,1],
-    [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1],
+    [1,3,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,3,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 
@@ -125,10 +142,12 @@ function setMap(map, blockSize){
             if(map[row][col]=== 1){
                 wall.push(new square(col * blockSize, row * blockSize, blockSize, blockSize, "#0055ff"));
             }
+            if(map[row][col]=== 0){
+                coin.push(new circle((col*blockSize) +(blockSize / 2),(row*blockSize) +(blockSize / 2),5,"gold"));
+            }
         }
     }
 }
-
 function draw(){
     cx.clearRect(0,0,cv.clientWidth,cv.height);
     for(i =0; i < wall.length; i++){
@@ -136,32 +155,26 @@ function draw(){
         if(pacman.intersects(wall[i])){
             pacman.x = pacman.lastX;
             pacman.y = pacman.lastY;
-            pacman.dir = null;
-            canMove = false;
+            
         }
+    }
+    for(i = 0; i < coin.length;i++){
+        coin[i].draw();
     }
     pacman.draw();
 }
 
 function run(){
     
-   pacman.move(lastPress);
+    pacman.move(lastPress);
     setMap(level0, 30);
     draw();
     
 }
-window.setInterval(run,60)
 
-
+window.setInterval(run,10);
 window.addEventListener("keydown",function(evt){
-    let code = evt.keyCode;
-    
-    
+    let code = evt.keyCode; 
     lastPress = code;
-    
-    
-
-   
-    
 });
 };
