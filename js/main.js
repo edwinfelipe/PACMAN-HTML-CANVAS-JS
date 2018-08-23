@@ -150,16 +150,16 @@ function setMap(map, blockSize){
 }
 function draw(){
     cx.clearRect(0,0,cv.clientWidth,cv.height);
-    for(i =0; i < wall.length; i++){
-        wall[i].draw();
-        if(pacman.intersects(wall[i])){
+    for(let w of wall){
+        w.draw();
+        if(pacman.intersects(w)){
             pacman.x = pacman.lastX;
             pacman.y = pacman.lastY;
             
         }
     }
-    for(i = 0; i < coin.length;i++){
-        coin[i].draw();
+    for(let c of coin){
+        c.draw();
     }
     pacman.draw();
 }
@@ -172,7 +172,7 @@ function run(){
     
 }
 
-window.setInterval(run,10);
+window.setInterval(run,60);
 window.addEventListener("keydown",function(evt){
     let code = evt.keyCode; 
     lastPress = code;
