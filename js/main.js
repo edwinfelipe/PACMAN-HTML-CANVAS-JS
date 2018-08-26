@@ -8,6 +8,7 @@ wall = [],
 coin =[],
 pacman;
 
+//objetos que nos permitiran crear los obstaculos y personajes del juego
 var square = function(x,y,wi,he,color){
     this.x = x;
     this.y = y;
@@ -22,6 +23,7 @@ var circle = function(x,y,r,color){
     this.color = color;
     
 };
+// en los siguientes prototipos se agregan a los objetos funciones que los dibujan y los mueven por la pantalla
 square.prototype ={
     draw: function(){
         cx.beginPath();
@@ -77,6 +79,7 @@ circle.prototype ={
         cx.closePath();
     }
 };
+//es el tile map de donde se dibujara el escenario
 var level0=[
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,3,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,3,1],
@@ -100,6 +103,7 @@ var level0=[
     [1,3,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,3,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
+//se inicializan las variables y se inicia el juego 
 function init(){
     cv = document.getElementById("lienzo");
     cx = cv.getContext("2d");
@@ -107,6 +111,7 @@ function init(){
     setMap(level0, 30);
     window.setInterval(run,90);
 }
+//esta funcion almacena los objetos en array para luego dibujarlos
 function setMap(map, blockSize){
     let col = 0,  
     columns = 0;
@@ -124,6 +129,7 @@ function setMap(map, blockSize){
         }
     }
 }
+//esta funcion dibuja el juego
 function draw(){
     cx.clearRect(0,0,cv.width,cv.height);
     for(let w of wall){
@@ -134,6 +140,7 @@ function draw(){
     }
     pacman.draw();
 }
+//colisiones, movimientos, puntajes,etc
 function actions(){
     pacman.move(lastPress);
     for(let w of wall){
@@ -151,11 +158,12 @@ function actions(){
     }
     
     
-}
+}//esta es la funcion que corre el juego a 90 fps
 function run(){
     actions();
     draw();
 }
+//se escucha la ultima tecla presionada, para darle direccion al personaje
 window.addEventListener("keydown",function(evt){
     let code = evt.keyCode; 
     lastPress = code;
