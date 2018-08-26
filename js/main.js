@@ -176,7 +176,7 @@ function run(){
     
 }
 
-window.setInterval(run,60);
+window.setInterval(run,90);
 window.addEventListener("keydown",function(evt){
     let code = evt.keyCode; 
     lastPress = code;
